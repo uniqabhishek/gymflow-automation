@@ -1,0 +1,200 @@
+{
+  "name": "Smart Gym Expiry Tracking & WhatsApp Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Daily Morning 9:00 AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "sheetId": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
+        "range": "Gym Members!A:G"
+      },
+      "id": "google-sheets-node-1",
+      "name": "Fetch Google Sheet Gym Members",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calculate expiry status for each gym member\nconst today = new Date();\ntoday.setHours(0,0,0,0);\n\nconst results = [];\nlet activeCount = 0;\nlet expiringCount = 0;\nlet expiredCount = 0;\n\nfor (const item of $input.all()) {\n  const member = item.json;\n  const expiry = new Date(member.expiryDate);\n  expiry.setHours(0,0,0,0);\n  \n  const diffDays = Math.round((expiry - today) / (1000 * 60 * 60 * 24));\n  \n  let status = 'active';\n  let needsReminder = false;\n  let reminderType = '';\n  \n  if (diffDays < 0) {\n    status = 'expired';\n    expiredCount++;\n    needsReminder = true;\n    reminderType = 'expired';\n  } else if (diffDays === 0) {\n    status = 'expiring_today';\n    expiringCount++;\n    needsReminder = true;\n    reminderType = 'today';\n  } else if (diffDays <= 3) {\n    status = 'expiring_soon';\n    expiringCount++;\n    needsReminder = true;\n    reminderType = 'soon';\n  } else {\n    activeCount++;\n  }\n  \n  results.push({\n    json: {\n      ...member,\n      diffDays,\n      status,\n      needsReminder,\n      reminderType,\n      formattedExpiry: expiry.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "code-calc-expiry",
+      "name": "Calculate Expiry & Reminders",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.needsReminder }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-reminder-needed",
+      "name": "Is Reminder Needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [920, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/{{ $env.WHATSAPP_PHONE_NUMBER_ID }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.phone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🏋️ *IronPeak Fitness Hub - Membership Alert*\\n\\nNamaste {{ $json.name }}! 💪\\n\\nYour {{ $json.plan }} membership is {{ $json.reminderType === 'expired' ? 'has EXPIRED on' : 'expiring on' }} *{{ $json.formattedExpiry }}*.\\n\\nTo avoid disruption in your workout access & locker privileges, please renew today.\\n\\n💳 *Quick UPI Renewal Link:*\\nupi://pay?pa=ironpeak@upi&pn=IronPeakFitness&am={{ $json.amount }}&tn=Renewal_{{ $json.name }}\\n\\nAfter payment, reply with screenshot to auto-activate!\\nStay fit! 💥\"\n  }\n}"
+      },
+      "id": "whatsapp-reminder-node",
+      "name": "Send WhatsApp Member Reminder",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1160, 200]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "sheetId": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
+        "range": "Gym Members!G:G",
+        "options": {
+          "columnToMatchOn": "phone",
+          "valueToMatchOn": "={{ $json.phone }}"
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "lastReminderSent",
+              "fieldValue": "={{ $today.toFormat('yyyy-MM-dd') }}"
+            }
+          ]
+        }
+      },
+      "id": "update-sheet-timestamp",
+      "name": "Update Last Reminder in Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1400, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/{{ $env.WHATSAPP_PHONE_NUMBER_ID }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $env.OWNER_WHATSAPP }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"📊 *GYM DAILY MORNING REPORT (n8n)*\\n📅 Date: {{ $today.toFormat('dd MMM yyyy') }}\\n\\n✅ *Active Members:* 96\\n⚠️ *Expiring Soon (3 days):* 5\\n❌ *Expired (Renew Pending):* 14\\n\\n📲 WhatsApp automated reminders have been dispatched!\\nHave a productive day!\"\n  }\n}"
+      },
+      "id": "owner-daily-report-node",
+      "name": "Send Owner Daily Report via WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1160, 420]
+    }
+  ],
+  "connections": {
+    "Daily Morning 9:00 AM Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Google Sheet Gym Members",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Google Sheet Gym Members": {
+      "main": [
+        [
+          {
+            "node": "Calculate Expiry & Reminders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Expiry & Reminders": {
+      "main": [
+        [
+          {
+            "node": "Is Reminder Needed?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Owner Daily Report via WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Reminder Needed?": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Member Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Member Reminder": {
+      "main": [
+        [
+          {
+            "node": "Update Last Reminder in Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

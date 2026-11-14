@@ -29,7 +29,7 @@ export default function N8nWorkflowViewer() {
       title: "Daily Cron Trigger",
       desc: "Executes every morning at 09:00 AM automatically.",
       tech: "n8n Schedule Trigger",
-      color: "from-amber-500/20 to-orange-500/10 border-amber-500/30 text-amber-400"
+      color: "text-amber-600 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-800"
     },
     {
       step: "02",
@@ -37,7 +37,7 @@ export default function N8nWorkflowViewer() {
       title: "Fetch Member Database",
       desc: "Pulls all active & expired members from Google Sheet or database.",
       tech: "Google Sheets / Webhook",
-      color: "from-emerald-500/20 to-teal-500/10 border-emerald-500/30 text-emerald-400"
+      color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800"
     },
     {
       step: "03",
@@ -45,7 +45,7 @@ export default function N8nWorkflowViewer() {
       title: "Calculate Expiry & Logic",
       desc: "Calculates difference between today and expiryDate. Flags ≤ 3 days & expired.",
       tech: "n8n Code Node (JS)",
-      color: "from-cyan-500/20 to-blue-500/10 border-cyan-500/30 text-cyan-400"
+      color: "text-blue-600 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800"
     },
     {
       step: "04",
@@ -53,7 +53,7 @@ export default function N8nWorkflowViewer() {
       title: "IF Condition Filter",
       desc: "Checks if reminder was already sent today to prevent spamming.",
       tech: "n8n IF Node",
-      color: "from-indigo-500/20 to-purple-500/10 border-indigo-500/30 text-indigo-400"
+      color: "text-purple-600 bg-purple-50 dark:bg-purple-950/60 border-purple-200 dark:border-purple-800"
     },
     {
       step: "05",
@@ -61,7 +61,7 @@ export default function N8nWorkflowViewer() {
       title: "Dispatch WhatsApp API",
       desc: "Sends personalized WhatsApp reminder with instant UPI QR & payment link.",
       tech: "WhatsApp API / HTTP Node",
-      color: "from-emerald-500/20 to-cyan-500/10 border-emerald-500/30 text-emerald-400"
+      color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800"
     },
     {
       step: "06",
@@ -69,7 +69,7 @@ export default function N8nWorkflowViewer() {
       title: "Owner Morning Summary",
       desc: "Compiles total active, expiring & expired counts and sends to gym owner.",
       tech: "Daily Report Bot",
-      color: "from-purple-500/20 to-pink-500/10 border-purple-500/30 text-purple-400"
+      color: "text-pink-600 bg-pink-50 dark:bg-pink-950/60 border-pink-200 dark:border-pink-800"
     }
   ];
 
@@ -77,23 +77,23 @@ export default function N8nWorkflowViewer() {
     <div className="space-y-6">
       
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-cyan-500/15 via-blue-600/10 to-transparent border border-cyan-500/25 p-5 sm:p-6 rounded-3xl">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+            <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
               <Workflow className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white">n8n Automation Pipeline</h2>
-              <p className="text-xs text-slate-300">
-                The exact zero-code / low-code workflow pipeline featured in the viral Instagram Reel!
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">n8n Automation Pipeline</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                The exact workflow pipeline featured in the viral Instagram Reel.
               </p>
             </div>
           </div>
 
           <button
             onClick={handleDownloadWorkflow}
-            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-cyan-500/20 transition-all transform active:scale-95 cursor-pointer whitespace-nowrap"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-sm transition-all transform active:scale-95 cursor-pointer whitespace-nowrap"
           >
             <FileDown className="w-4 h-4" />
             <span>Download n8n Workflow (.json)</span>
@@ -107,31 +107,31 @@ export default function N8nWorkflowViewer() {
           Execution Flow Architecture
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {workflowSteps.map((node, index) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+          {workflowSteps.map((node) => {
             const Icon = node.icon;
             return (
               <div 
                 key={node.step}
-                className={`p-5 rounded-2xl border bg-gradient-to-b ${node.color} bg-slate-900/80 relative overflow-hidden group hover:scale-[1.02] transition-all`}
+                className="p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden space-y-2 hover:shadow-md transition-all"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-slate-950/80 border border-white/10 text-slate-300">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                     NODE #{node.step}
                   </span>
-                  <div className="p-2 rounded-xl bg-slate-950/60 border border-white/10 text-white group-hover:scale-110 transition-transform">
+                  <div className={`p-2 rounded-xl border ${node.color}`}>
                     <Icon className="w-4 h-4" />
                   </div>
                 </div>
 
-                <h4 className="text-sm font-black text-white">{node.title}</h4>
-                <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">{node.title}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                   {node.desc}
                 </p>
 
-                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
                   <span>{node.tech}</span>
-                  <span className="text-emerald-400 font-bold">Ready</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">Ready</span>
                 </div>
               </div>
             );
@@ -140,30 +140,30 @@ export default function N8nWorkflowViewer() {
       </div>
 
       {/* n8n Import Instructions Guide */}
-      <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-xl">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
-          <Layers className="w-4 h-4 text-cyan-400" />
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 space-y-3 shadow-sm">
+        <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <Layers className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           How to Setup this Automation in n8n (Step-by-Step):
         </h3>
 
-        <ol className="space-y-2.5 text-xs text-slate-300 list-decimal list-inside leading-relaxed">
+        <ol className="space-y-2 text-xs text-slate-600 dark:text-slate-300 list-decimal list-inside leading-relaxed">
           <li>
-            <strong className="text-white">Download Workflow:</strong> Click the <span className="text-cyan-400 font-semibold">"Download n8n Workflow (.json)"</span> button above.
+            <strong className="text-slate-900 dark:text-white">Download Workflow:</strong> Click the <span className="text-emerald-600 dark:text-emerald-400 font-semibold">"Download n8n Workflow (.json)"</span> button above.
           </li>
           <li>
-            <strong className="text-white">Open n8n:</strong> Log in to your self-hosted n8n (Docker / Render / Railway) or n8n Cloud account.
+            <strong className="text-slate-900 dark:text-white">Open n8n:</strong> Log in to your self-hosted n8n (Docker / Render / Railway) or n8n Cloud account.
           </li>
           <li>
-            <strong className="text-white">Import Workflow:</strong> Click on <span className="font-semibold text-slate-100">Workflows &rarr; Import from File</span> and upload the downloaded <code className="px-1.5 py-0.5 rounded bg-slate-950 text-cyan-400 font-mono">gym-automation-workflow.json</code>.
+            <strong className="text-slate-900 dark:text-white">Import Workflow:</strong> Click on <span className="font-semibold text-slate-800 dark:text-slate-200">Workflows &rarr; Import from File</span> and upload <code className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-950 text-emerald-600 dark:text-emerald-400 font-mono">gym-automation-workflow.json</code>.
           </li>
           <li>
-            <strong className="text-white">Connect Google Sheet:</strong> Paste your Google Sheet spreadsheet ID containing the member columns (<code className="px-1 py-0.5 rounded bg-slate-950 text-slate-300">Name, Phone, Plan, Joined, Expiry, Status</code>).
+            <strong className="text-slate-900 dark:text-white">Connect Google Sheet:</strong> Paste your spreadsheet ID containing member columns (<code className="px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-300">Name, Phone, Plan, Joined, Expiry, Status</code>).
           </li>
           <li>
-            <strong className="text-white">Configure WhatsApp:</strong> Add your WhatsApp Cloud API Token or webhook to trigger direct automated WhatsApp messages.
+            <strong className="text-slate-900 dark:text-white">Connect WhatsApp:</strong> Add your WhatsApp Cloud API Token or webhook to trigger automated WhatsApp messages.
           </li>
           <li>
-            <strong className="text-white">Activate:</strong> Switch the workflow toggle to <span className="text-emerald-400 font-bold">ACTIVE</span>! The automation will execute every morning without requiring any manual effort.
+            <strong className="text-slate-900 dark:text-white">Activate:</strong> Switch the workflow toggle to <span className="text-emerald-600 dark:text-emerald-400 font-bold">ACTIVE</span>! The automation executes every morning.
           </li>
         </ol>
       </div>

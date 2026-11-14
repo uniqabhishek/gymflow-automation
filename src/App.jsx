@@ -14,6 +14,15 @@ import WhatsAppPreviewModal from './components/WhatsAppPreviewModal';
 import SettingsModal from './components/SettingsModal';
 
 import { 
+  Presentation, 
+  Users, 
+  MessageSquare, 
+  Workflow, 
+  FileText, 
+  Plus 
+} from 'lucide-react';
+
+import { 
   loadMembers, 
   saveMembers, 
   loadSettings, 
@@ -26,7 +35,11 @@ export default function App() {
   const [members, setMembers] = useState(() => loadMembers());
   const [settings, setSettings] = useState(() => loadSettings());
 
-  // Default to true for Pitch / Sales presentation demo, or false for operational portal
+  // Theme state: 'light' by default for clean minimal SaaS look
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('gymflow_theme') || 'light';
+  });
+
   const [isPitchMode, setIsPitchMode] = useState(true);
   const [activeTab, setActiveTab] = useState('members');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('all');
@@ -47,19 +60,25 @@ export default function App() {
     saveSettings(settings);
   }, [settings]);
 
-  // Handler: Add new member
+  useEffect(() => {
+    localStorage.setItem('gymflow_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   const handleAddMember = (newMember) => {
     setMembers(prev => [newMember, ...prev]);
   };
 
-  // Handler: Delete member
   const handleDeleteMember = (memberId) => {
     if (confirm("Are you sure you want to remove this member?")) {
       setMembers(prev => prev.filter(m => m.id !== memberId));
     }
   };
 
-  // Handler: Mark member as paid via UPI
   const handleConfirmPayment = (memberId) => {
     setMembers(prev => prev.map(m => {
       if (m.id === memberId) {
@@ -83,18 +102,15 @@ export default function App() {
     }));
   };
 
-  // Handler: Renew member
   const handleRenewMember = (updatedMember) => {
     setMembers(prev => prev.map(m => m.id === updatedMember.id ? updatedMember : m));
   };
 
-  // Handler: Mark reminder sent timestamp
   const handleMarkReminderSent = (memberId) => {
     const today = new Date().toISOString().split('T')[0];
     setMembers(prev => prev.map(m => m.id === memberId ? { ...m, lastReminderSent: today } : m));
   };
 
-  // Handler: Reset default data
   const handleResetData = () => {
     const refreshed = initialMembers.map(m => ({ ...m, status: calculateStatus(m.expiryDate) }));
     setMembers(refreshed);
@@ -109,8 +125,18 @@ export default function App() {
     setIsPitchMode(false);
   };
 
+  const handleSelectBottomTab = (tab) => {
+    if (tab === 'pitch') {
+      setIsPitchMode(true);
+    } else {
+      setIsPitchMode(false);
+      setActiveTab(tab);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col selection:bg-cyan-500 selection:text-slate-950">
+    <div className="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white transition-colors pb-20 md:pb-8">
       
       {/* Top Navigation */}
       <Navbar
@@ -122,10 +148,12 @@ export default function App() {
         setActiveTab={setActiveTab}
         isPitchMode={isPitchMode}
         setIsPitchMode={setIsPitchMode}
+        theme={theme}
+        setTheme={setTheme}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5">
         
         {/* Mode 1: Gym Owner Sales Pitch & Client Demo */}
         {isPitchMode ? (
@@ -176,8 +204,8 @@ export default function App() {
 
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/60 py-6 text-center text-xs text-slate-400">
+      {/* Desktop Footer */}
+      <footer className="border-t border-slate-200/80 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 py-6 text-center text-xs text-slate-500 hidden md:block">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
             GymFlow • Client Sales Demo & Smart Gym Expiry Automation System
@@ -187,6 +215,87 @@ export default function App() {
           </span>
         </div>
       </footer>
+
+      {/* NATIVE MOBILE FLOATING ACTION BUTTON (Add Member) */}
+      {!isPitchMode && (
+        <button
+          onClick={() => setIsAddMemberOpen(true)}
+          title="Add New Member"
+          className="md:hidden fixed bottom-20 right-4 z-40 w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/40 flex items-center justify-center transition-all transform active:scale-95 cursor-pointer ring-4 ring-white dark:ring-slate-900"
+        >
+          <Plus className="w-6 h-6 stroke-[2.5]" />
+        </button>
+      )}
+
+      {/* NATIVE MOBILE STICKY BOTTOM NAVIGATION BAR */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/90 dark:border-slate-800 px-2 py-1.5 flex items-center justify-around shadow-lg">
+        
+        {/* Pitch / ROI */}
+        <button
+          onClick={() => handleSelectBottomTab('pitch')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            isPitchMode
+              ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+              : 'text-slate-500 dark:text-slate-400'
+          }`}
+        >
+          <Presentation className="w-5 h-5" />
+          <span className="text-[10px]">Pitch</span>
+        </button>
+
+        {/* Members */}
+        <button
+          onClick={() => handleSelectBottomTab('members')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            !isPitchMode && activeTab === 'members'
+              ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+              : 'text-slate-500 dark:text-slate-400'
+          }`}
+        >
+          <Users className="w-5 h-5" />
+          <span className="text-[10px]">Members</span>
+        </button>
+
+        {/* WhatsApp Bot */}
+        <button
+          onClick={() => handleSelectBottomTab('automations')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            !isPitchMode && activeTab === 'automations'
+              ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+              : 'text-slate-500 dark:text-slate-400'
+          }`}
+        >
+          <MessageSquare className="w-5 h-5" />
+          <span className="text-[10px]">WhatsApp</span>
+        </button>
+
+        {/* n8n Flow */}
+        <button
+          onClick={() => handleSelectBottomTab('n8n')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            !isPitchMode && activeTab === 'n8n'
+              ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+              : 'text-slate-500 dark:text-slate-400'
+          }`}
+        >
+          <Workflow className="w-5 h-5" />
+          <span className="text-[10px]">n8n Flow</span>
+        </button>
+
+        {/* Daily Report */}
+        <button
+          onClick={() => handleSelectBottomTab('dailyReport')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+            !isPitchMode && activeTab === 'dailyReport'
+              ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+              : 'text-slate-500 dark:text-slate-400'
+          }`}
+        >
+          <FileText className="w-5 h-5" />
+          <span className="text-[10px]">Report</span>
+        </button>
+
+      </nav>
 
       {/* Modals */}
       <AddMemberModal

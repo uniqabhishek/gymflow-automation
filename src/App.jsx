@@ -5,6 +5,7 @@ import MembersList from './components/MembersList';
 import WhatsAppAutomationCenter from './components/WhatsAppAutomationCenter';
 import DailyReportView from './components/DailyReportView';
 import N8nWorkflowViewer from './components/N8nWorkflowViewer';
+import GymOwnerPitchDemo from './components/GymOwnerPitchDemo';
 
 import AddMemberModal from './components/AddMemberModal';
 import UpiPaymentModal from './components/UpiPaymentModal';
@@ -25,6 +26,8 @@ export default function App() {
   const [members, setMembers] = useState(() => loadMembers());
   const [settings, setSettings] = useState(() => loadSettings());
 
+  // Default to true for Pitch / Sales presentation demo, or false for operational portal
+  const [isPitchMode, setIsPitchMode] = useState(true);
   const [activeTab, setActiveTab] = useState('members');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('all');
 
@@ -60,7 +63,6 @@ export default function App() {
   const handleConfirmPayment = (memberId) => {
     setMembers(prev => prev.map(m => {
       if (m.id === memberId) {
-        // If expired, advance expiry date by duration
         const today = new Date();
         today.setHours(0,0,0,0);
         const currentExp = new Date(m.expiryDate);
@@ -104,6 +106,7 @@ export default function App() {
   const handleFilterByStatus = (status) => {
     setSelectedStatusFilter(status);
     setActiveTab('members');
+    setIsPitchMode(false);
   };
 
   return (
@@ -117,47 +120,58 @@ export default function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        isPitchMode={isPitchMode}
+        setIsPitchMode={setIsPitchMode}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         
-        {/* KPI Dashboard (Visible across all tabs for quick context) */}
-        <StatsDashboard 
-          members={members} 
-          settings={settings}
-          onFilterByStatus={handleFilterByStatus}
-        />
-
-        {/* Tab Views */}
-        {activeTab === 'members' && (
-          <MembersList
-            members={members}
-            onOpenWhatsApp={(member) => setWhatsAppModalMember(member)}
-            onOpenUpiModal={(member) => setUpiModalMember(member)}
-            onOpenRenewModal={(member) => setRenewModalMember(member)}
-            onDeleteMember={handleDeleteMember}
-            selectedStatusFilter={selectedStatusFilter}
-            setSelectedStatusFilter={setSelectedStatusFilter}
-          />
-        )}
-
-        {activeTab === 'automations' && (
-          <WhatsAppAutomationCenter
-            members={members}
+        {/* Mode 1: Gym Owner Sales Pitch & Client Demo */}
+        {isPitchMode ? (
+          <GymOwnerPitchDemo 
+            onSwitchToApp={() => setIsPitchMode(false)}
             settings={settings}
           />
-        )}
+        ) : (
+          /* Mode 2: Live Gym Management Operating Portal */
+          <>
+            <StatsDashboard 
+              members={members} 
+              settings={settings}
+              onFilterByStatus={handleFilterByStatus}
+            />
 
-        {activeTab === 'n8n' && (
-          <N8nWorkflowViewer />
-        )}
+            {activeTab === 'members' && (
+              <MembersList
+                members={members}
+                onOpenWhatsApp={(member) => setWhatsAppModalMember(member)}
+                onOpenUpiModal={(member) => setUpiModalMember(member)}
+                onOpenRenewModal={(member) => setRenewModalMember(member)}
+                onDeleteMember={handleDeleteMember}
+                selectedStatusFilter={selectedStatusFilter}
+                setSelectedStatusFilter={setSelectedStatusFilter}
+              />
+            )}
 
-        {activeTab === 'dailyReport' && (
-          <DailyReportView
-            members={members}
-            settings={settings}
-          />
+            {activeTab === 'automations' && (
+              <WhatsAppAutomationCenter
+                members={members}
+                settings={settings}
+              />
+            )}
+
+            {activeTab === 'n8n' && (
+              <N8nWorkflowViewer />
+            )}
+
+            {activeTab === 'dailyReport' && (
+              <DailyReportView
+                members={members}
+                settings={settings}
+              />
+            )}
+          </>
         )}
 
       </main>
@@ -166,10 +180,10 @@ export default function App() {
       <footer className="border-t border-slate-900 bg-slate-950/60 py-6 text-center text-xs text-slate-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
-            GymFlow • Smart Gym Expiry Tracking & WhatsApp Automation System
+            GymFlow • Client Sales Demo & Smart Gym Expiry Automation System
           </span>
           <span className="flex items-center gap-1 text-slate-400">
-            Powered by n8n & WhatsApp Cloud API • Built with React & Tailwind CSS
+            Agency Turnkey Setup by Abhishek Singh • Powered by n8n & WhatsApp Cloud API
           </span>
         </div>
       </footer>

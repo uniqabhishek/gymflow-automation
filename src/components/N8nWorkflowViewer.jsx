@@ -2,10 +2,7 @@ import React from 'react';
 import { 
   Workflow, 
   FileDown, 
-  CheckCircle2, 
-  ExternalLink, 
   Layers, 
-  ArrowRight, 
   Clock, 
   Database, 
   Cpu, 

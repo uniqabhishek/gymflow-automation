@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
 import { 
-  TrendingUp, 
-  IndianRupee, 
   Send, 
-  ShieldCheck, 
-  Zap, 
   CheckCircle2, 
-  XCircle, 
-  PhoneCall, 
   MessageCircle, 
   Download, 
   Calculator, 
   Sparkles, 
   ArrowRight,
-  Clock,
-  Award,
-  Users
+  ShieldCheck
 } from 'lucide-react';
 import { openWhatsApp } from '../utils/whatsapp';
 
@@ -39,6 +31,10 @@ export default function GymOwnerPitchDemo({ onSwitchToApp, settings }) {
   const setupFee = 12000;
   const paybackDays = Math.max(1, Math.round((setupFee / monthlyRecovered) * 30));
 
+  const developerName = settings?.developerName || "Abhishek";
+  const developerWhatsApp = "919499268612";
+  const developerUpi = settings?.upiId || "9499268312@slc";
+
   const handleSendTestToOwner = (e) => {
     e.preventDefault();
     if (!testOwnerPhone.trim()) {
@@ -57,25 +53,22 @@ This is a live demonstration of your gym's automated reminder system.
 💰 *Renewal Fee:* ₹${avgFee * 3}
 
 💳 *Instant UPI Renewal Link:*
-upi://pay?pa=ironpeak@upi&pn=${encodeURIComponent(testGymName)}&am=${avgFee * 3}&tn=Demo_Renewal
+upi://pay?pa=${encodeURIComponent(developerUpi)}&pn=${encodeURIComponent(testGymName)}&am=${avgFee * 3}&tn=Demo_Renewal
 
 ⚡ *Why this works:*
 1. 98% of members open WhatsApp within 5 minutes.
 2. 1-click UPI payment eliminates excuses.
 3. Your staff saves 2+ hours daily.
 
-Let's automate your gym today! Contact Abhishek Singh. 🚀`;
+Let's automate your gym today! Contact ${developerName} (WhatsApp Only: +91 9499268612). 🚀`;
 
     openWhatsApp(testOwnerPhone, testMessage);
     setTestSent(true);
     setTimeout(() => setTestSent(false), 5000);
   };
 
-  const directCallPhone = "919876543210";
-  const directWhatsAppPhone = "919876543210";
-
   return (
-    <div className="space-y-8 py-2">
+    <div className="space-y-6 sm:space-y-8 py-2">
       
       {/* Hero Pitch Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-6 sm:p-10 shadow-sm">
@@ -104,22 +97,36 @@ Let's automate your gym today! Contact Abhishek Singh. 🚀`;
             </button>
 
             <a
-              href={`https://wa.me/${directWhatsAppPhone}?text=${encodeURIComponent("Hi Abhishek! I want to get the GymFlow WhatsApp automation setup installed for my gym.")}`}
+              href={`https://wa.me/${developerWhatsApp}?text=${encodeURIComponent("Hi Abhishek! I want to get the GymFlow WhatsApp automation setup installed for my gym.")}`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 text-xs font-bold shadow-sm transition-all transform active:scale-95 cursor-pointer"
             >
               <MessageCircle className="w-4 h-4 fill-current text-emerald-400 dark:text-emerald-600" />
-              <span>Book Setup on WhatsApp</span>
+              <span>Book Setup on WhatsApp (Only)</span>
             </a>
 
             <a
-              href="https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.0/GymFlow-Demo-v1.0.apk"
+              href="https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.2/GymFlow-Demo-v1.0.2.apk"
               className="flex items-center gap-1.5 px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors"
             >
               <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span>Download Android APK</span>
+              <span>Download Android APK v1.0.2</span>
             </a>
+          </div>
+
+          {/* Developer Contact Verified Badge */}
+          <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+            <span className="flex items-center gap-1.5 font-medium">
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              Developer & Owner: <strong className="text-slate-800 dark:text-slate-200">{developerName}</strong>
+            </span>
+            <span className="flex items-center gap-1 font-mono">
+              WhatsApp: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">+91 9499268612</strong> (WhatsApp Only)
+            </span>
+            <span className="flex items-center gap-1 font-mono">
+              UPI: <strong className="text-slate-700 dark:text-slate-300">{developerUpi}</strong>
+            </span>
           </div>
         </div>
       </div>
@@ -332,7 +339,7 @@ Let's automate your gym today! Contact Abhishek Singh. 🚀`;
                 Pays for itself in {paybackDays} DAYS! 🚀
               </span>
               <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                Zero monthly fees forever after that.
+                Zero monthly software subscription fees forever.
               </span>
             </div>
           </div>
@@ -426,7 +433,7 @@ Let's automate your gym today! Contact Abhishek Singh. 🚀`;
             },
             {
               title: "Complete Staff Training & Support",
-              desc: "30 days of direct phone/WhatsApp priority support and staff walkthrough."
+              desc: "30 days of direct WhatsApp priority support from Abhishek."
             }
           ].map((item, i) => (
             <div key={i} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-1.5">
@@ -453,27 +460,24 @@ Let's automate your gym today! Contact Abhishek Singh. 🚀`;
         </h3>
 
         <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto leading-relaxed">
-          Book a 15-minute live consultation with Abhishek Singh. We will configure your gym's automated WhatsApp bot and database within 48 hours.
+          Book a 15-minute live consultation with <strong>{developerName}</strong>. We will configure your gym's automated WhatsApp bot and database within 48 hours.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
-            href={`https://wa.me/${directWhatsAppPhone}?text=${encodeURIComponent("Hi Abhishek! I saw the GymFlow demo and want to book the setup for my gym.")}`}
+            href={`https://wa.me/${developerWhatsApp}?text=${encodeURIComponent("Hi Abhishek! I saw the GymFlow demo and want to book the setup for my gym.")}`}
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-emerald-800 hover:bg-slate-100 text-xs font-black shadow-md transition-all transform active:scale-95 cursor-pointer"
           >
             <MessageCircle className="w-4 h-4 fill-current text-emerald-600" />
-            <span>Chat on WhatsApp (+91 98765 43210)</span>
+            <span>Chat on WhatsApp (+91 9499268612)</span>
           </a>
 
-          <a
-            href={`tel:+${directCallPhone}`}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-800/80 hover:bg-emerald-800 text-white text-xs font-black border border-white/20 transition-colors cursor-pointer"
-          >
-            <PhoneCall className="w-4 h-4" />
-            <span>Call Directly</span>
-          </a>
+          <div className="flex items-center gap-1.5 px-4 py-3 rounded-xl bg-emerald-800/80 text-white text-xs font-bold border border-white/20">
+            <ShieldCheck className="w-4 h-4 text-emerald-300" />
+            <span>WhatsApp Only: +91 9499268612</span>
+          </div>
 
           <button
             onClick={onSwitchToApp}

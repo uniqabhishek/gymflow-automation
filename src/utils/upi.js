@@ -1,8 +1,8 @@
 import QRCode from 'qrcode';
 
 export function createUpiUri({ upiId, payeeName, amount, transactionNote }) {
-  const pa = encodeURIComponent(upiId || 'ironpeak@upi');
-  const pn = encodeURIComponent(payeeName || 'Gym Fitness');
+  const pa = encodeURIComponent(upiId || '9499268312@slc');
+  const pn = encodeURIComponent(payeeName || 'Abhishek');
   const am = amount ? encodeURIComponent(amount.toString()) : '';
   const tn = encodeURIComponent(transactionNote || 'Gym Membership Renewal');
   

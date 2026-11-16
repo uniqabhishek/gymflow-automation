@@ -1,24 +1,20 @@
-import React, { useState } from 'react';
-import { X, RefreshCw, Calendar, IndianRupee, CheckCircle2, MessageSquare } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { X, RefreshCw, CheckCircle2, MessageSquare } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { membershipPlans } from '../data/initialMembers';
 import { generateWhatsAppMessage, openWhatsApp } from '../utils/whatsapp';
 
 export default function RenewModal({ isOpen, onClose, member, settings, onRenewMember }) {
-  if (!isOpen || !member) return null;
-
   const [selectedPlanId, setSelectedPlanId] = useState('3m');
   const [customAmount, setCustomAmount] = useState(4000);
   const [sendReceiptWhatsApp, setSendReceiptWhatsApp] = useState(true);
 
-  const selectedPlan = membershipPlans.find(p => p.id === selectedPlanId) || membershipPlans[1];
+  const selectedPlan = useMemo(() => {
+    return membershipPlans.find(p => p.id === selectedPlanId) || membershipPlans[1];
+  }, [selectedPlanId]);
 
-  const handlePlanSelect = (plan) => {
-    setSelectedPlanId(plan.id);
-    setCustomAmount(plan.amount);
-  };
-
-  const computeNewExpiryDate = () => {
+  const newExpiryDate = useMemo(() => {
+    if (!member) return '';
     const today = new Date();
     today.setHours(0,0,0,0);
     const currentExp = new Date(member.expiryDate);
@@ -26,11 +22,16 @@ export default function RenewModal({ isOpen, onClose, member, settings, onRenewM
 
     const baseDate = currentExp > today ? currentExp : today;
     const newDate = new Date(baseDate);
-    newDate.setMonth(newDate.getMonth() + selectedPlan.durationMonths);
+    newDate.setMonth(newDate.getMonth() + (selectedPlan?.durationMonths || 1));
     return newDate.toISOString().split('T')[0];
-  };
+  }, [member, selectedPlan]);
 
-  const newExpiryDate = computeNewExpiryDate();
+  if (!isOpen || !member) return null;
+
+  const handlePlanSelect = (plan) => {
+    setSelectedPlanId(plan.id);
+    setCustomAmount(plan.amount);
+  };
 
   const handleRenewSubmit = (e) => {
     e.preventDefault();
@@ -41,8 +42,8 @@ export default function RenewModal({ isOpen, onClose, member, settings, onRenewM
         spread: 60,
         origin: { y: 0.6 }
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
+      // ignore
     }
 
     const updatedMember = {
@@ -66,30 +67,30 @@ export default function RenewModal({ isOpen, onClose, member, settings, onRenewM
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 border-t sm:border border-slate-200/90 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200 overscroll-contain">
+      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 border-t sm:border border-slate-200/90 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 pb-8 sm:pb-6 shadow-2xl max-h-[92vh] overflow-y-auto">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
-              <RefreshCw className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center border border-purple-200 dark:border-purple-800">
+              <RefreshCw className="w-4 h-4" />
             </div>
-            <div>
+            <div className="text-left">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white">Renew Membership Plan</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Extends validity & updates member status</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Extends validity & updates member status</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Member Banner */}
-        <div className="mt-3.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+        <div className="mt-3.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
           <div>
             <span className="font-bold text-sm text-slate-900 dark:text-white block">{member.name}</span>
             <span className="text-xs text-slate-500">Plan: {member.plan}</span>
@@ -132,11 +133,11 @@ export default function RenewModal({ isOpen, onClose, member, settings, onRenewM
           </div>
 
           {/* New Expiry & Fee */}
-          <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+          <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
             <div>
               <span className="text-[11px] text-slate-500 block">New Expiry Date:</span>
               <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">
-                {new Date(newExpiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                {newExpiryDate ? new Date(newExpiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
               </span>
             </div>
 
@@ -155,7 +156,7 @@ export default function RenewModal({ isOpen, onClose, member, settings, onRenewM
           </div>
 
           {/* Send Receipt */}
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span className="text-xs text-slate-700 dark:text-slate-300 font-medium">Send WhatsApp Confirmation</span>

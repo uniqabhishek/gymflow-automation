@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Clock, AlertTriangle, IndianRupee, MessageCircle, Send, CheckCircle, ArrowUpRight } from 'lucide-react';
+import { Users, Clock, AlertTriangle, IndianRupee, MessageCircle, ArrowUpRight } from 'lucide-react';
 import { generateWhatsAppMessage, openWhatsApp } from '../utils/whatsapp';
 
 export default function StatsDashboard({ members, settings, onFilterByStatus }) {

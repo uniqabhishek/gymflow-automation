@@ -203,9 +203,12 @@ export const membershipPlans = [
 
 export const defaultSettings = {
   gymName: "IronPeak Fitness Hub",
-  ownerName: "Abhishek Singh",
-  ownerPhone: "919876543210",
-  upiId: "ironpeak@upi",
+  ownerName: "Abhishek",
+  ownerPhone: "919499268612",
+  developerName: "Abhishek",
+  developerPhone: "919499268612",
+  developerUpi: "9499268312@slc",
+  upiId: "9499268312@slc",
   currency: "₹",
   address: "Sector 18, Commercial Belt, Metro Hub",
   n8nWebhookUrl: "https://your-n8n-instance.com/webhook/gym-member-update",

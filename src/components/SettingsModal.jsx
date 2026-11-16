@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { X, Settings, Save, RotateCcw, Building2, User, Phone, QrCode, Globe } from 'lucide-react';
-import { initialMembers, defaultSettings } from '../data/initialMembers';
+import React, { useState, useEffect } from 'react';
+import { X, Settings, Save, RotateCcw, Building2, User, Phone, QrCode, Globe, MessageCircle } from 'lucide-react';
 
 export default function SettingsModal({ isOpen, onClose, settings, onSaveSettings, onResetData }) {
-  if (!isOpen) return null;
-
   const [formData, setFormData] = useState({ ...settings });
+
+  if (!isOpen) return null;
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -25,26 +24,61 @@ export default function SettingsModal({ isOpen, onClose, settings, onSaveSetting
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-t sm:border border-slate-200/90 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200 overscroll-contain">
+      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-t sm:border border-slate-200/90 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 pb-8 sm:pb-6 shadow-2xl max-h-[92vh] overflow-y-auto">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-              <Settings className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center border border-slate-200 dark:border-slate-700">
+              <Settings className="w-4 h-4" />
             </div>
-            <div>
+            <div className="text-left">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white">Gym Configuration & Settings</h3>
-              <p className="text-xs text-slate-500">Configure UPI, gym details & n8n webhook</p>
+              <p className="text-[11px] text-slate-500">Configure UPI, gym details & n8n webhook</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
+        </div>
+
+        {/* Developer & System Architect Card */}
+        <div className="mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/20 dark:border-emerald-500/30 text-left">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                App Developer & Owner
+              </span>
+            </div>
+            <a
+              href="https://wa.me/919499268612?text=Hi%20Abhishek!%20I%20have%20a%20question%20about%20the%20GymFlow%20app%20setup."
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-sm transition-all"
+            >
+              <MessageCircle className="w-3 h-3 fill-current" />
+              <span>WhatsApp Developer</span>
+            </a>
+          </div>
+          <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <span className="text-[10px] text-slate-400 block">Name:</span>
+              <span className="font-extrabold text-slate-900 dark:text-white">Abhishek</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block">WhatsApp (Only):</span>
+              <span className="font-bold text-slate-900 dark:text-white font-mono">+91 9499268612</span>
+            </div>
+            <div className="col-span-2 pt-1 border-t border-emerald-500/10">
+              <span className="text-[10px] text-slate-400 block">Official UPI ID:</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">9499268312@slc</span>
+            </div>
+          </div>
         </div>
 
         {/* Form */}
@@ -60,7 +94,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSaveSetting
               <input
                 type="text"
                 required
-                value={formData.gymName}
+                value={formData.gymName || ''}
                 onChange={(e) => handleChange('gymName', e.target.value)}
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
               />
@@ -78,7 +112,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSaveSetting
                 <input
                   type="text"
                   required
-                  value={formData.ownerName}
+                  value={formData.ownerName || ''}
                   onChange={(e) => handleChange('ownerName', e.target.value)}
                   className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
                 />
@@ -94,7 +128,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSaveSetting
                 <input
                   type="tel"
                   required
-                  value={formData.ownerPhone}
+                  value={formData.ownerPhone || ''}
                   onChange={(e) => handleChange('ownerPhone', e.target.value)}
                   className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
                 />
@@ -112,9 +146,9 @@ export default function SettingsModal({ isOpen, onClose, settings, onSaveSetting
               <input
                 type="text"
                 required
-                value={formData.upiId}
+                value={formData.upiId || ''}
                 onChange={(e) => handleChange('upiId', e.target.value)}
-                placeholder="e.g. gymname@upi or mobile@okaxis"
+                placeholder="e.g. 9499268312@slc"
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-emerald-700 dark:text-emerald-400 font-mono font-bold focus:outline-none focus:border-emerald-500"
               />
             </div>

@@ -10,7 +10,7 @@ export function cleanPhone(phone) {
 
 export function generateWhatsAppMessage(type, member, settings) {
   const gymName = settings?.gymName || "IronPeak Fitness Hub";
-  const upiId = settings?.upiId || "ironpeak@upi";
+  const upiId = settings?.upiId || "9499268312@slc";
   const memberName = member?.name || "Valued Member";
   const plan = member?.plan || "Membership";
   const amount = member?.amount || 1500;
@@ -132,7 +132,7 @@ export function generateDailyOwnerReport(members, settings) {
 
 📈 *MEMBERSHIP METRICS:*
 🟢 *Active Members:* ${active}
-⚠️ *Expiring Soon (≤3 Days):* ${expiringSoon}
+⚠️ *Expiring Soon (≤3 Days):* ${expiringSoon} (Today: ${expiringToday})
 ❌ *Expired / Renew Pending:* ${expired}
 👥 *Total Enrolled:* ${members.length}
 
@@ -149,7 +149,9 @@ ${expiredMembersList.length > 0 ? expiredMembersList.slice(0, 5).join('\n') : 'N
 ━━━━━━━━━━━━━━━━━━━━
 🤖 *Automation Status:*
 ⚡ n8n Workflow active & WhatsApp reminders synced.
-Have a high-growth day, Coach ${settings?.ownerName || 'Abhishek'}! 💪`;
+Have a high-growth day, Coach ${settings?.ownerName || 'Abhishek'}! 💪
+━━━━━━━━━━━━━━━━━━━━
+💡 *Setup & Support:* Abhishek (WhatsApp Only: +91 9499268612) • UPI: 9499268312@slc`;
 
   return report;
 }

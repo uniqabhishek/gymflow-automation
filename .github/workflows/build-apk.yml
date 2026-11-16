@@ -46,38 +46,44 @@ jobs:
       - name: Prepare APK Asset
         run: |
           mkdir -p release-apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/GymFlow-Demo-v1.0.1.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/GymFlow-Demo-v1.0.2.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: GymFlow-Demo-APK
-          path: release-apk/GymFlow-Demo-v1.0.1.apk
+          path: release-apk/GymFlow-Demo-v1.0.2.apk
           retention-days: 30
 
       - name: Create GitHub Release & Attach APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.1
-          name: "GymFlow Demo v1.0.1 (Android APK)"
+          tag_name: v1.0.2
+          name: "GymFlow Demo v1.0.2 (Android APK Update)"
           body: |
-            ### 🏋️‍♂️ GymFlow — Client Sales Demo & Smart Gym Expiry Automation System
-            
-            Download the official Android APK below to install GymFlow directly on any Android smartphone or tablet:
-            
-            * 📱 **APK Direct Download**: [GymFlow-Demo-v1.0.1.apk](https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.1/GymFlow-Demo-v1.0.1.apk)
+            ### 🏋️‍♂️ GymFlow v1.0.2 — Client Sales Demo & Smart Gym Automation System
+
+            Download the updated Android APK below to install GymFlow directly on any Android smartphone or tablet:
+
+            * 📱 **APK Direct Download**: [GymFlow-Demo-v1.0.2.apk](https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.2/GymFlow-Demo-v1.0.2.apk)
             * 🌐 **Live Web Demo**: [https://uniqabhishek.github.io/gymflow-automation/](https://uniqabhishek.github.io/gymflow-automation/)
-            
-            #### Features Included:
-            - ✨ Clean, Minimalist, Modern SaaS UI (Light & Dark theme)
-            - 📱 Mobile-First Native App Layout with Sticky Bottom Navigation & FAB
-            - 💼 Turnkey Gym Owner Pitch & Sales Presentation Mode
-            - 📲 Live WhatsApp Demo (Sends real test reminders to the owner's phone)
-            - 💰 Interactive Lost Revenue & ROI Calculator
-            - 💳 Instant UPI QR Code Generation & 1-Click Renewal
-            - 🌅 Daily 9:00 AM Owner Morning Briefing
-            - 🔄 Downloadable n8n Automation Workflow JSON
-          files: release-apk/GymFlow-Demo-v1.0.1.apk
+
+            #### What's New in v1.0.2:
+            - 🛠️ **Developer & Owner Details Integrated**:
+              - Developer & Owner: **Abhishek**
+              - WhatsApp Support (WhatsApp Only): **+91 9499268612**
+              - Official UPI ID: **9499268312@slc**
+            - 🧹 **Zero Overlap & Smooth Mobile Optimization**:
+              - Eliminated duplicate tab navigation bar on mobile screens.
+              - Bottom padding expanded to prevent navigation bar from covering member card action buttons.
+              - Mobile member cards now include quick delete button and responsive text truncation.
+            - ⚡ **React Performance & Bug Fixes**:
+              - Resolved React Rules-of-Hooks order issues across all modals.
+              - Unconditional state derivation and smooth transitions.
+            - 🎨 **Minimal, Eye-Catching Clean Theme**:
+              - Apple & Linear-grade crisp slate/zinc palette with emerald green accents.
+              - High-contrast typography and subtle glassmorphic styling.
+          files: release-apk/GymFlow-Demo-v1.0.2.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

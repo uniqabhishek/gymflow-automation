@@ -136,7 +136,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white transition-colors pb-20 md:pb-8">
+    <div className="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white transition-colors pb-32 sm:pb-24 md:pb-8">
       
       {/* Top Navigation */}
       <Navbar
@@ -210,8 +210,8 @@ export default function App() {
           <span>
             GymFlow • Client Sales Demo & Smart Gym Expiry Automation System
           </span>
-          <span className="flex items-center gap-1 text-slate-400">
-            Agency Turnkey Setup by Abhishek Singh • Powered by n8n & WhatsApp Cloud API
+          <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            Agency Setup by <strong className="text-slate-700 dark:text-slate-200">Abhishek</strong> • WhatsApp (Only): <strong className="text-emerald-600 dark:text-emerald-400 font-mono">+91 9499268612</strong> • UPI: <strong className="font-mono text-slate-600 dark:text-slate-300">9499268312@slc</strong>
           </span>
         </div>
       </footer>
@@ -322,6 +322,7 @@ export default function App() {
       />
 
       <WhatsAppPreviewModal
+        key={whatsAppModalMember?.id}
         isOpen={!!whatsAppModalMember}
         onClose={() => setWhatsAppModalMember(null)}
         member={whatsAppModalMember}
@@ -330,6 +331,7 @@ export default function App() {
       />
 
       <SettingsModal
+        key={isSettingsOpen ? 'open' : 'closed'}
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         settings={settings}

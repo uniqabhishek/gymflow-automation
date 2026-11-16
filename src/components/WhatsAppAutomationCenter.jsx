@@ -1,13 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
-  MessageSquare, 
   Send, 
-  CheckCircle, 
-  Clock, 
-  AlertTriangle, 
-  Sparkles, 
   Copy, 
-  ExternalLink,
   Bot
 } from 'lucide-react';
 import { generateWhatsAppMessage, openWhatsApp } from '../utils/whatsapp';
@@ -17,15 +11,21 @@ export default function WhatsAppAutomationCenter({ members, settings }) {
   const [selectedMemberId, setSelectedMemberId] = useState(members[0]?.id || '');
   const [copied, setCopied] = useState(false);
 
-  const selectedMember = members.find(m => m.id === selectedMemberId) || members[0] || {
+  const fallbackMember = useMemo(() => ({
     name: "Rahul Sharma",
     plan: "Quarterly (3 Months)",
     amount: 4000,
-    phone: "919876543210",
-    expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-  };
+    phone: "919499268612",
+    expiryDate: "2026-11-20"
+  }), []);
 
-  const previewMessage = generateWhatsAppMessage(selectedTemplate, selectedMember, settings);
+  const selectedMember = useMemo(() => {
+    return members.find(m => m.id === selectedMemberId) || members[0] || fallbackMember;
+  }, [members, selectedMemberId, fallbackMember]);
+
+  const previewMessage = useMemo(() => {
+    return generateWhatsAppMessage(selectedTemplate, selectedMember, settings);
+  }, [selectedTemplate, selectedMember, settings]);
 
   const templates = [
     {

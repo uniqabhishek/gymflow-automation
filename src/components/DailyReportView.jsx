@@ -3,13 +3,7 @@ import {
   FileText, 
   Send, 
   Copy, 
-  Check, 
-  TrendingUp, 
-  Users, 
-  AlertTriangle, 
-  CheckCircle2, 
-  IndianRupee,
-  Share2
+  Check
 } from 'lucide-react';
 import { generateDailyOwnerReport, openWhatsApp } from '../utils/whatsapp';
 

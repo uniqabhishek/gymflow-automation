@@ -1,18 +1,10 @@
-import React, { useState } from 'react';
-import { X, UserPlus, Calendar, Phone, Mail, IndianRupee, MessageCircle, Sparkles } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { X, UserPlus, MessageCircle } from 'lucide-react';
 import { membershipPlans } from '../data/initialMembers';
 import { generateWhatsAppMessage, openWhatsApp } from '../utils/whatsapp';
 
 export default function AddMemberModal({ isOpen, onClose, onAddMember, settings }) {
-  if (!isOpen) return null;
-
-  const todayStr = new Date().toISOString().split('T')[0];
-
-  const calculateExpiry = (startDate, months) => {
-    const d = new Date(startDate);
-    d.setMonth(d.getMonth() + Number(months));
-    return d.toISOString().split('T')[0];
-  };
+  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -23,7 +15,17 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
   const [notes, setNotes] = useState('');
   const [sendWelcomeWhatsApp, setSendWelcomeWhatsApp] = useState(true);
 
-  const selectedPlan = membershipPlans.find(p => p.id === selectedPlanId) || membershipPlans[1];
+  const selectedPlan = useMemo(() => {
+    return membershipPlans.find(p => p.id === selectedPlanId) || membershipPlans[1];
+  }, [selectedPlanId]);
+
+  const calculatedExpiryDate = useMemo(() => {
+    const d = new Date(joinDate || todayStr);
+    d.setMonth(d.getMonth() + Number(selectedPlan.durationMonths || 1));
+    return d.toISOString().split('T')[0];
+  }, [joinDate, selectedPlan, todayStr]);
+
+  if (!isOpen) return null;
 
   const handlePlanChange = (planId) => {
     setSelectedPlanId(planId);
@@ -32,8 +34,6 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
       setAmount(plan.amount);
     }
   };
-
-  const calculatedExpiryDate = calculateExpiry(joinDate, selectedPlan.durationMonths);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,22 +72,27 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
       openWhatsApp(newMember.phone, welcomeMsg);
     }
 
+    // Reset form
+    setName('');
+    setPhone('');
+    setEmail('');
+    setNotes('');
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-t sm:border border-slate-200/90 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200 overscroll-contain">
+      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-t sm:border border-slate-200/90 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 pb-8 sm:pb-6 shadow-2xl max-h-[92vh] overflow-y-auto">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-              <UserPlus className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
+              <UserPlus className="w-4 h-4" />
             </div>
-            <div>
+            <div className="text-left">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white">Add New Gym Member</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Auto-calculates expiry date and syncs to database</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Auto-calculates expiry date and syncs to database</p>
             </div>
           </div>
           <button
@@ -113,7 +118,7 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Vikram Malhotra"
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -126,7 +131,7 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="e.g. 9876543210"
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
               />
             </div>
           </div>
@@ -141,7 +146,7 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g. vikram@example.com"
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
             />
           </div>
 
@@ -191,7 +196,7 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
                 type="date"
                 value={joinDate}
                 onChange={(e) => setJoinDate(e.target.value)}
-                className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                className="w-full px-2 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
               />
             </div>
 
@@ -203,7 +208,7 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
                 type="date"
                 readOnly
                 value={calculatedExpiryDate}
-                className="w-full px-2 py-1.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-700 dark:text-emerald-400 font-bold focus:outline-none"
+                className="w-full px-2 py-2 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-700 dark:text-emerald-400 font-bold focus:outline-none"
               />
             </div>
 
@@ -215,7 +220,7 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-emerald-500"
+                className="w-full px-2 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-emerald-500"
               />
             </div>
           </div>
@@ -230,12 +235,12 @@ export default function AddMemberModal({ isOpen, onClose, onAddMember, settings 
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Morning 7 AM batch, locker #12"
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
             />
           </div>
 
           {/* Toggle Send Welcome WhatsApp */}
-          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between cursor-pointer">
+          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex items-center justify-between cursor-pointer">
             <div className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4 text-emerald-600 fill-emerald-600/20" />
               <div>

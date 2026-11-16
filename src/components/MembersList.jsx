@@ -1,21 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Search, 
-  Filter, 
   MessageCircle, 
   QrCode, 
   RefreshCw, 
   Trash2, 
-  Edit3, 
   Download, 
-  Calendar, 
   Phone, 
-  Mail, 
   CheckCircle2, 
   AlertCircle, 
-  Clock, 
-  ChevronRight,
-  Plus
+  Clock
 } from 'lucide-react';
 import { exportToCsv } from '../utils/storage';
 
@@ -24,7 +18,6 @@ export default function MembersList({
   onOpenWhatsApp,
   onOpenUpiModal,
   onOpenRenewModal,
-  onEditMember,
   onDeleteMember,
   selectedStatusFilter,
   setSelectedStatusFilter
@@ -74,9 +67,9 @@ export default function MembersList({
       return { text: 'Expires Tomorrow', color: 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-900' };
     }
     if (diff <= 3) {
-      return { text: `Expires in ${diff} days`, color: 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-900' };
+      return { text: `Expires in ${diff}d`, color: 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-900' };
     }
-    return { text: `Valid for ${diff} days`, color: 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-900' };
+    return { text: `Valid for ${diff}d`, color: 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-900' };
   };
 
   const activeCount = members.filter(m => m.status === 'active').length;
@@ -86,7 +79,7 @@ export default function MembersList({
   return (
     <div className="space-y-3.5 sm:space-y-4">
       
-      {/* Controls Bar (Mobile Optimized Stack) */}
+      {/* Controls Bar (Search + Plan Filter + Export) */}
       <div className="flex flex-col gap-2.5 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-sm">
         
         {/* Search Input */}
@@ -97,7 +90,7 @@ export default function MembersList({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, phone, plan..."
-            className="w-full pl-10 pr-12 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-950 transition-colors"
+            className="w-full pl-10 pr-12 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-950 transition-colors"
           />
           {searchQuery && (
             <button
@@ -118,11 +111,11 @@ export default function MembersList({
             onChange={(e) => setSelectedPlanFilter(e.target.value)}
             className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-emerald-500 cursor-pointer font-medium"
           >
-            <option value="all">All Plans</option>
-            <option value="monthly">Monthly (1M)</option>
-            <option value="quarterly">Quarterly (3M)</option>
-            <option value="half-yearly">Half-Yearly (6M)</option>
-            <option value="annual">Annual (1Y)</option>
+            <option value="all">All Membership Plans</option>
+            <option value="monthly">Monthly (1 Month)</option>
+            <option value="quarterly">Quarterly (3 Months)</option>
+            <option value="half-yearly">Half-Yearly (6 Months)</option>
+            <option value="annual">Annual (1 Year)</option>
           </select>
 
           {/* Export CSV */}
@@ -139,7 +132,7 @@ export default function MembersList({
       </div>
 
       {/* Filter Tabs (Horizontal Scrollable Pills) */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
         <button
           onClick={() => setSelectedStatusFilter('all')}
           className={`px-3 py-1.5 font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
@@ -216,30 +209,40 @@ export default function MembersList({
               >
                 {/* Card Header: Avatar + Name + Relative Badge */}
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-xs shadow-sm shrink-0 ${member.avatarColor || 'bg-emerald-600'}`}>
                       {member.name.slice(0, 2).toUpperCase()}
                     </div>
-                    <div>
-                      <h4 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight">
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight truncate">
                         {member.name}
                       </h4>
                       <a 
                         href={`tel:${member.phone}`}
                         className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:text-emerald-600 mt-0.5"
                       >
-                        <Phone className="w-3 h-3 text-slate-400" />
-                        <span>{member.phone}</span>
+                        <Phone className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className="truncate">{member.phone}</span>
                       </a>
                     </div>
                   </div>
 
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] border font-bold shrink-0 ${relative.color}`}>
-                    {member.status === 'expired' && <AlertCircle className="w-3 h-3" />}
-                    {member.status === 'expiring' && <Clock className="w-3 h-3" />}
-                    {member.status === 'active' && <CheckCircle2 className="w-3 h-3" />}
-                    <span>{relative.text}</span>
-                  </span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] border font-bold ${relative.color}`}>
+                      {member.status === 'expired' && <AlertCircle className="w-3 h-3 shrink-0" />}
+                      {member.status === 'expiring' && <Clock className="w-3 h-3 shrink-0" />}
+                      {member.status === 'active' && <CheckCircle2 className="w-3 h-3 shrink-0" />}
+                      <span>{relative.text}</span>
+                    </span>
+
+                    <button
+                      onClick={() => onDeleteMember(member.id)}
+                      title="Remove Member"
+                      className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Plan Details & Dates Grid */}
@@ -271,7 +274,7 @@ export default function MembersList({
                     onClick={() => onOpenWhatsApp(member)}
                     className="flex items-center justify-center gap-1.5 py-2.5 px-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-sm transition-all active:scale-95 cursor-pointer"
                   >
-                    <MessageCircle className="w-4 h-4 fill-current" />
+                    <MessageCircle className="w-4 h-4 fill-current shrink-0" />
                     <span>WhatsApp</span>
                   </button>
 
@@ -280,7 +283,7 @@ export default function MembersList({
                     onClick={() => onOpenUpiModal(member)}
                     className="flex items-center justify-center gap-1.5 py-2.5 px-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 transition-all active:scale-95 cursor-pointer"
                   >
-                    <QrCode className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <QrCode className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>QR Pay</span>
                   </button>
 
@@ -289,7 +292,7 @@ export default function MembersList({
                     onClick={() => onOpenRenewModal(member)}
                     className="flex items-center justify-center gap-1.5 py-2.5 px-2 bg-purple-50 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-xl text-xs font-bold border border-purple-200 dark:border-purple-800 transition-all active:scale-95 cursor-pointer"
                   >
-                    <RefreshCw className="w-4 h-4" />
+                    <RefreshCw className="w-4 h-4 shrink-0" />
                     <span>Renew</span>
                   </button>
 

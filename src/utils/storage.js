@@ -1,7 +1,7 @@
 import { initialMembers, defaultSettings } from '../data/initialMembers';
 
-const STORAGE_KEY_MEMBERS = 'gymflow_members_v1';
-const STORAGE_KEY_SETTINGS = 'gymflow_settings_v1';
+const STORAGE_KEY_MEMBERS = 'gymflow_members_v2';
+const STORAGE_KEY_SETTINGS = 'gymflow_settings_v2';
 
 export function calculateStatus(expiryDate) {
   if (!expiryDate) return 'active';
@@ -49,7 +49,7 @@ export function loadSettings() {
       return defaultSettings;
     }
     return { ...defaultSettings, ...JSON.parse(raw) };
-  } catch (err) {
+  } catch {
     return defaultSettings;
   }
 }

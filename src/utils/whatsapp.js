@@ -151,7 +151,7 @@ ${expiredMembersList.length > 0 ? expiredMembersList.slice(0, 5).join('\n') : 'N
 ⚡ n8n Workflow active & WhatsApp reminders synced.
 Have a high-growth day, Coach ${settings?.ownerName || 'Abhishek'}! 💪
 ━━━━━━━━━━━━━━━━━━━━
-💡 *Setup & Support:* Abhishek (WhatsApp Only: +91 9499268612) • UPI: 9499268312@slc`;
+💡 *Setup & Support:* Abhishek (WhatsApp Only: +91 9499268312) • UPI: 9499268312@slc`;
 
   return report;
 }

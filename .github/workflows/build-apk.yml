@@ -46,44 +46,42 @@ jobs:
       - name: Prepare APK Asset
         run: |
           mkdir -p release-apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/GymFlow-Demo-v1.0.2.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/GymFlow-Demo-v1.0.3.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: GymFlow-Demo-APK
-          path: release-apk/GymFlow-Demo-v1.0.2.apk
+          path: release-apk/GymFlow-Demo-v1.0.3.apk
           retention-days: 30
 
       - name: Create GitHub Release & Attach APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.2
-          name: "GymFlow Demo v1.0.2 (Android APK Update)"
+          tag_name: v1.0.3
+          name: "GymFlow Demo v1.0.3 (Zymist Edition)"
           body: |
-            ### 🏋️‍♂️ GymFlow v1.0.2 — Client Sales Demo & Smart Gym Automation System
+            ### 🏋️‍♂️ Zymist GymFlow v1.0.3 — Release & Updates
 
             Download the updated Android APK below to install GymFlow directly on any Android smartphone or tablet:
 
-            * 📱 **APK Direct Download**: [GymFlow-Demo-v1.0.2.apk](https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.2/GymFlow-Demo-v1.0.2.apk)
+            * 📱 **APK Direct Download**: [GymFlow-Demo-v1.0.3.apk](https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.3/GymFlow-Demo-v1.0.3.apk)
             * 🌐 **Live Web Demo**: [https://uniqabhishek.github.io/gymflow-automation/](https://uniqabhishek.github.io/gymflow-automation/)
 
-            #### What's New in v1.0.2:
-            - 🛠️ **Developer & Owner Details Integrated**:
+            #### What's New in v1.0.3:
+            - ⚡ **Brand-New "Zymist" Power Gym Logo**:
+              - High-energy hexagonal power emblem with stylized dumbbell & lightning 'Z' bolt.
+            - 📞 **Developer Contact Verified**:
               - Developer & Owner: **Abhishek**
-              - WhatsApp Support (WhatsApp Only): **+91 9499268612**
+              - WhatsApp (WhatsApp Only): **+91 9499268312**
               - Official UPI ID: **9499268312@slc**
-            - 🧹 **Zero Overlap & Smooth Mobile Optimization**:
-              - Eliminated duplicate tab navigation bar on mobile screens.
-              - Bottom padding expanded to prevent navigation bar from covering member card action buttons.
-              - Mobile member cards now include quick delete button and responsive text truncation.
-            - ⚡ **React Performance & Bug Fixes**:
-              - Resolved React Rules-of-Hooks order issues across all modals.
-              - Unconditional state derivation and smooth transitions.
-            - 🎨 **Minimal, Eye-Catching Clean Theme**:
-              - Apple & Linear-grade crisp slate/zinc palette with emerald green accents.
-              - High-contrast typography and subtle glassmorphic styling.
-          files: release-apk/GymFlow-Demo-v1.0.2.apk
+            - 🛡️ **Zero Over-Scroll & Zero Top Whitespace Gap**:
+              - Fixed the mobile sliding/rubber-band glitch where empty white space appeared on top.
+              - Implemented `overscroll-behavior: none` and flush safe-area top inset padding on the sticky header.
+            - 🎨 **Clean, Eye-Catching Athletic Theme**:
+              - Refined contrast, deep obsidian `#080b11` in dark mode, crisp porcelain in light mode.
+              - High-impact neon mint and emerald accents for CTAs.
+          files: release-apk/GymFlow-Demo-v1.0.3.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

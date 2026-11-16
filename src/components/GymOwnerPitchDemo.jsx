@@ -32,7 +32,7 @@ export default function GymOwnerPitchDemo({ onSwitchToApp, settings }) {
   const paybackDays = Math.max(1, Math.round((setupFee / monthlyRecovered) * 30));
 
   const developerName = settings?.developerName || "Abhishek";
-  const developerWhatsApp = "919499268612";
+  const developerWhatsApp = "919499268312";
   const developerUpi = settings?.upiId || "9499268312@slc";
 
   const handleSendTestToOwner = (e) => {
@@ -60,7 +60,7 @@ upi://pay?pa=${encodeURIComponent(developerUpi)}&pn=${encodeURIComponent(testGym
 2. 1-click UPI payment eliminates excuses.
 3. Your staff saves 2+ hours daily.
 
-Let's automate your gym today! Contact ${developerName} (WhatsApp Only: +91 9499268612). 🚀`;
+Let's automate your gym today! Contact ${developerName} (WhatsApp Only: +91 9499268312). 🚀`;
 
     openWhatsApp(testOwnerPhone, testMessage);
     setTestSent(true);
@@ -107,11 +107,11 @@ Let's automate your gym today! Contact ${developerName} (WhatsApp Only: +91 9499
             </a>
 
             <a
-              href="https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.2/GymFlow-Demo-v1.0.2.apk"
+              href="https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.3/GymFlow-Demo-v1.0.3.apk"
               className="flex items-center gap-1.5 px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors"
             >
               <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span>Download Android APK v1.0.2</span>
+              <span>Download Android APK v1.0.3</span>
             </a>
           </div>
 
@@ -122,7 +122,7 @@ Let's automate your gym today! Contact ${developerName} (WhatsApp Only: +91 9499
               Developer & Owner: <strong className="text-slate-800 dark:text-slate-200">{developerName}</strong>
             </span>
             <span className="flex items-center gap-1 font-mono">
-              WhatsApp: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">+91 9499268612</strong> (WhatsApp Only)
+              WhatsApp: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">+91 9499268312</strong> (WhatsApp Only)
             </span>
             <span className="flex items-center gap-1 font-mono">
               UPI: <strong className="text-slate-700 dark:text-slate-300">{developerUpi}</strong>
@@ -471,12 +471,12 @@ Let's automate your gym today! Contact ${developerName} (WhatsApp Only: +91 9499
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-emerald-800 hover:bg-slate-100 text-xs font-black shadow-md transition-all transform active:scale-95 cursor-pointer"
           >
             <MessageCircle className="w-4 h-4 fill-current text-emerald-600" />
-            <span>Chat on WhatsApp (+91 9499268612)</span>
+            <span>Chat on WhatsApp (+91 9499268312)</span>
           </a>
 
           <div className="flex items-center gap-1.5 px-4 py-3 rounded-xl bg-emerald-800/80 text-white text-xs font-bold border border-white/20">
             <ShieldCheck className="w-4 h-4 text-emerald-300" />
-            <span>WhatsApp Only: +91 9499268612</span>
+            <span>WhatsApp Only: +91 9499268312</span>
           </div>
 
           <button

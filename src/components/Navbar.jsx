@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  Dumbbell, 
   Plus, 
   Send, 
   Settings, 
@@ -10,6 +9,7 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
+import GymLogo from './GymLogo';
 import { generateDailyOwnerReport, openWhatsApp } from '../utils/whatsapp';
 
 export default function Navbar({ 
@@ -34,22 +34,20 @@ export default function Navbar({
   };
 
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+    <header className="sticky top-0 z-40 backdrop-blur-md bg-white/95 dark:bg-[#080b11]/95 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors pt-[env(safe-area-inset-top,0px)]">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-15 sm:h-16 gap-2 sm:gap-3">
           
-          {/* Logo & Gym Name */}
+          {/* Zymist GymFlow Logo & Branding */}
           <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 dark:bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-500/20 text-white">
-              <Dumbbell className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
+            <GymLogo className="w-8 h-8 sm:w-9 sm:h-9" />
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-sm sm:text-lg text-slate-900 dark:text-white tracking-tight">
-                  GymFlow
+                <span className="font-black text-sm sm:text-lg text-slate-900 dark:text-white tracking-tight">
+                  Zymist<span className="text-emerald-500 font-bold ml-0.5">Flow</span>
                 </span>
-                <span className="hidden xs:inline-block px-1.5 py-0.2 text-[9px] sm:text-[10px] font-bold rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-800/80">
-                  Automation
+                <span className="hidden xs:inline-block px-1.5 py-0.2 text-[9px] sm:text-[10px] font-extrabold rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-800/80 uppercase tracking-wider">
+                  Pro
                 </span>
               </div>
               <p className="text-[10px] text-slate-400 dark:text-slate-500 hidden sm:block truncate max-w-[160px]">
@@ -144,12 +142,12 @@ export default function Navbar({
 
             {/* Download APK Button */}
             <a
-              href="https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.2/GymFlow-Demo-v1.0.2.apk"
-              title="Download Android APK v1.0.2"
+              href="https://github.com/uniqabhishek/gymflow-automation/releases/download/v1.0.3/GymFlow-Demo-v1.0.3.apk"
+              title="Download Android APK v1.0.3"
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl transition-all cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>APK</span>
+              <span>APK v1.0.3</span>
             </a>
 
             {/* Quick Send Daily Report */}

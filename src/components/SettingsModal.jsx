@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Settings, Save, RotateCcw, Building2, User, Phone, QrCode, Globe, MessageCircle } from 'lucide-react';
 
 export default function SettingsModal({ isOpen, onClose, settings, onSaveSettings, onResetData }) {
@@ -56,7 +56,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSaveSetting
               </span>
             </div>
             <a
-              href="https://wa.me/919499268612?text=Hi%20Abhishek!%20I%20have%20a%20question%20about%20the%20GymFlow%20app%20setup."
+              href="https://wa.me/919499268312?text=Hi%20Abhishek!%20I%20have%20a%20question%20about%20the%20GymFlow%20app%20setup."
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-sm transition-all"
@@ -72,7 +72,7 @@ export default function SettingsModal({ isOpen, onClose, settings, onSaveSetting
             </div>
             <div>
               <span className="text-[10px] text-slate-400 block">WhatsApp (Only):</span>
-              <span className="font-bold text-slate-900 dark:text-white font-mono">+91 9499268612</span>
+              <span className="font-bold text-slate-900 dark:text-white font-mono">+91 9499268312</span>
             </div>
             <div className="col-span-2 pt-1 border-t border-emerald-500/10">
               <span className="text-[10px] text-slate-400 block">Official UPI ID:</span>

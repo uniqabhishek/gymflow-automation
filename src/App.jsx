@@ -62,10 +62,13 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem('gymflow_theme', theme);
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
+      if (metaTheme) metaTheme.setAttribute('content', '#080b11');
     } else {
       document.documentElement.classList.remove('dark');
+      if (metaTheme) metaTheme.setAttribute('content', '#f8fafc');
     }
   }, [theme]);
 
@@ -211,7 +214,7 @@ export default function App() {
             GymFlow • Client Sales Demo & Smart Gym Expiry Automation System
           </span>
           <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-            Agency Setup by <strong className="text-slate-700 dark:text-slate-200">Abhishek</strong> • WhatsApp (Only): <strong className="text-emerald-600 dark:text-emerald-400 font-mono">+91 9499268612</strong> • UPI: <strong className="font-mono text-slate-600 dark:text-slate-300">9499268312@slc</strong>
+            Agency Setup by <strong className="text-slate-700 dark:text-slate-200">Abhishek</strong> • WhatsApp (Only): <strong className="text-emerald-600 dark:text-emerald-400 font-mono">+91 9499268312</strong> • UPI: <strong className="font-mono text-slate-600 dark:text-slate-300">9499268312@slc</strong>
           </span>
         </div>
       </footer>
@@ -221,14 +224,14 @@ export default function App() {
         <button
           onClick={() => setIsAddMemberOpen(true)}
           title="Add New Member"
-          className="md:hidden fixed bottom-20 right-4 z-40 w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/40 flex items-center justify-center transition-all transform active:scale-95 cursor-pointer ring-4 ring-white dark:ring-slate-900"
+          className="md:hidden fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] right-4 z-40 w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl shadow-emerald-600/40 flex items-center justify-center transition-all transform active:scale-95 cursor-pointer ring-4 ring-white dark:ring-[#080b11]"
         >
           <Plus className="w-6 h-6 stroke-[2.5]" />
         </button>
       )}
 
       {/* NATIVE MOBILE STICKY BOTTOM NAVIGATION BAR */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/90 dark:border-slate-800 px-2 py-1.5 flex items-center justify-around shadow-lg">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#080b11]/95 backdrop-blur-lg border-t border-slate-200/90 dark:border-slate-800/90 px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] flex items-center justify-around shadow-lg">
         
         {/* Pitch / ROI */}
         <button

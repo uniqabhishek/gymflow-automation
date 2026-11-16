@@ -15,7 +15,7 @@ export default function WhatsAppAutomationCenter({ members, settings }) {
     name: "Rahul Sharma",
     plan: "Quarterly (3 Months)",
     amount: 4000,
-    phone: "919499268612",
+    phone: "919499268312",
     expiryDate: "2026-11-20"
   }), []);
 

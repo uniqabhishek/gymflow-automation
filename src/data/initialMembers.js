@@ -204,9 +204,9 @@ export const membershipPlans = [
 export const defaultSettings = {
   gymName: "IronPeak Fitness Hub",
   ownerName: "Abhishek",
-  ownerPhone: "919499268612",
+  ownerPhone: "919499268312",
   developerName: "Abhishek",
-  developerPhone: "919499268612",
+  developerPhone: "919499268312",
   developerUpi: "9499268312@slc",
   upiId: "9499268312@slc",
   currency: "₹",
